@@ -6,7 +6,7 @@ export default class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            todo: []
+            todo: JSON.parse(localStorage.getItem("todo")) || []
         };
         this.handleAdd = this.handleAdd.bind(this);
         this.handleRemove = this.handleRemove.bind(this);
@@ -18,9 +18,14 @@ export default class App extends Component {
         e.preventDefault();
 
         this.state.todo.push({title: e.target.title.value});
-        this.setState({
-            todo: this.state.todo
-        });
+        this.setState(
+            {
+                todo: this.state.todo
+            },
+            () => {
+                localStorage.setItem("todo", JSON.stringify(this.state.todo))
+            }
+        )
         // inputのvalueを空に
         e.target.title.value = '';
     }
@@ -29,7 +34,14 @@ export default class App extends Component {
     handleRemove(i){
         // 配列のi番目から1つめのデータを削除
         this.state.todo.splice(i, 1);
-        this.setState({todo: this.state.todo});
+        this.setState(
+            {
+                todo: this.state.todo
+            },
+            () => {
+                localStorage.setItem("todo", JSON.stringify(this.state.todo))
+            }
+        )
     }
 
     render() {
